@@ -5,7 +5,7 @@ from random import seed, randint, shuffle
 from datetime import datetime
 from pathlib import Path
 from os import walk, urandom
-from background_handler import BackgroundHandler
+from source.background_handler import BackgroundHandler
 
 
 class MusicPlayer:

@@ -1,5 +1,4 @@
 from tinytag import TinyTag
-from pathlib import Path
 from subprocess import run
 
 
@@ -17,18 +16,14 @@ class BackgroundHandler:
         album: str = self.album.replace(" ", "").lower().replace("'", "")
         album_name: str = cover_path + album + ".png"
         print(album_name)
-        my_file = Path("album_name")
-        match my_file.is_file():
-            case True:
-                run(
-                    [
-                        "gsettings",
-                        "set",
-                        "org.gnome.desktop.background",
-                        "picture-uri-dark",
-                        album_name,
-                    ]
-                )
-            case _:
-                print("No file with album name found in the directory")
+        run(
+            [
+                "gsettings",
+                "set",
+                "org.gnome.desktop.background",
+                "picture-uri-dark",
+                album_name,
+            ]
+        )
+        print("No file with album name found in the directory")
         return None
