@@ -13,6 +13,7 @@ class BackgroundHandler:
         pass
 
     def change_background(self, cover_path: str) -> None:
+        print("changing background")
         album: str = self.album.replace(" ", "").lower().replace("'", "")
         album_name: str = cover_path + album + ".png"
         print(album_name)
