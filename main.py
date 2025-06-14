@@ -8,13 +8,37 @@ with open(file="source/intel.json", mode="r") as file:
     intel: list = load(file)
 
 path: str = ""
+operating_system: int = 8
 for information in intel:
-    os: str = information.get("OS")
+    operating_system: int = information.get("OS")
     path: str = information.get("song_path")
     cover_path: str = information.get("cover_path")
 
 yeezy: MusicPlayer = MusicPlayer(music_path=path)
 songHandler: SongHandler = SongHandler()
+
+match operating_system:
+    case 0:
+        command: list = [
+            "gsettings",
+            "set",
+            "org.gnome.desktop.background",
+            "picture-uri-dark",
+        ]
+    case 1:
+        command: list = [
+            "reg",
+            "add",
+            "HKEY_CURRENT_USER\\Control Panel\\Desktop",
+            "/v",
+            "Wallpaper",
+            "/t",
+            "REG_SZ",
+            "/d",
+        ]
+    case _:
+        print("Run setup program first")
+        quit()
 
 
 def main(path: str = path):
@@ -28,9 +52,7 @@ def main(path: str = path):
     songInspector: BackgroundHandler = BackgroundHandler(
         current_track=song,
     )
-    songInspector.change_background(
-        cover_path=cover_path,
-    )
+    songInspector.change_background(cover_path=cover_path, command=command)
     songHandler.dump_song_list(
         yeezy.handle_played_music(song, played_songs),
     )
