@@ -26,13 +26,14 @@ class MusicPlayer:
     def get_random_song(self, played_songs: list) -> str:
         print("getting random song")
         songs: list = list()
+        index: int = 0
         dir: str = str()
         self.current_song: str = ""
         for dir, _, songs in walk(self.path):
             pass
         for song in songs:
             song: str = dir + str(Path(song))
-        while self.current_song in played_songs:
+        while self.current_song in played_songs and index < len(songs):
             shuffle(songs)
             seed(self.get_seed())
             index: int = randint(0, len(songs))
