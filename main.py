@@ -18,14 +18,14 @@ for information in intel:
 
 
 match operating_system:
-    case 0:
+    case 1:
         command: list = [
             "gsettings",
             "set",
             "org.gnome.desktop.background",
             "picture-uri-dark",
         ]
-    case 1:
+    case 0:
         command: list = [
             "reg",
             "add",
