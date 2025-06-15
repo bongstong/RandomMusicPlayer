@@ -16,7 +16,7 @@ class MusicPlayer:
     def play(self) -> str:
         song_info: BackgroundHandler = BackgroundHandler(self.current_song)
         music_length = song_info.duration
-        print("playing", self.current_song)
+        print("playing:", self.current_song)
         mixer.init()
         mixer.music.load(self.current_song)
         mixer.music.play()
@@ -33,11 +33,25 @@ class MusicPlayer:
             pass
         for song in songs:
             song: str = dir + str(Path(song))
-        while self.current_song in played_songs and index < len(songs):
-            shuffle(songs)
-            seed(self.get_seed())
-            index: int = randint(0, len(songs))
-            self.current_song: str = dir + "/" + songs[index]
+        try:
+            while self.current_song in played_songs:
+                shuffle(songs)
+                seed(self.get_seed())
+                index: int = randint(0, len(songs))
+                self.current_song: str = dir + "/" + songs[index]
+        except IndexError:
+            while self.current_song in played_songs:
+                self.current_song: str = (
+                    dir
+                    + "/"
+                    + songs[
+                        randint(
+                            0,
+                            len(songs),
+                        )
+                    ]
+                )
+
         return self.current_song
 
     def get_seed(self) -> int:

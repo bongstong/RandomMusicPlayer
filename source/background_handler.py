@@ -12,12 +12,34 @@ class BackgroundHandler:
         self.duration: str = str(tag.duration)
         pass
 
-    def change_background(self, cover_path: str, command: list) -> None:
+    def change_background(self, cover_path: str, operating_sys: int) -> None:
+        match operating_sys:
+            case 1:
+                command: list = [
+                    "gsettings",
+                    "set",
+                    "org.gnome.desktop.background",
+                    "picture-uri-dark",
+                ]
+            case 0:
+                command: list = [
+                    "reg",
+                    "add",
+                    "HKEY_CURRENT_USER\\Control Panel\\Desktop",
+                    "/v",
+                    "Wallpaper",
+                    "/t",
+                    "REG_SZ",
+                    "/d",
+                ]
+            case _:
+                print("Run setup program first")
+                quit()
         print("changing background")
         album: str = self.album.replace(" ", "").lower().replace("'", "")
         album_name: str = cover_path + album + ".png"
         command.append(album_name)
-        print(album_name)
+        print(self.album)
         run(command)
-        print("No file with album name found in the directory")
+        print(command)
         return None
