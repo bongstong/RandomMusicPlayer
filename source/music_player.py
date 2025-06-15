@@ -1,10 +1,8 @@
-from time import sleep
-from pygame import mixer
+from pygame import mixer, USEREVENT
 from random import seed, randint, shuffle
 from datetime import datetime
 from pathlib import Path
 from os import walk, urandom
-from source.background_handler import BackgroundHandler
 
 
 class MusicPlayer:
@@ -14,13 +12,11 @@ class MusicPlayer:
         return None
 
     def play(self) -> str:
-        song_info: BackgroundHandler = BackgroundHandler(self.current_song)
-        music_length = song_info.duration
         print("playing:", self.current_song)
         mixer.init()
         mixer.music.load(self.current_song)
         mixer.music.play()
-        sleep(float(music_length))
+        mixer.music.set_endevent(USEREVENT+1)
         return self.current_song
 
     def get_random_song(self, played_songs: list) -> str:

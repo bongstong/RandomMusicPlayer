@@ -1,8 +1,9 @@
 from source.background_handler import BackgroundHandler
+import threading
 import tkinter as tk
 from source.music_player import MusicPlayer
 from source.song_handler import SongHandler
-from os import remove, walk
+from os import remove
 from json import load
 
 with open(file="source/intel.json", mode="r") as file:
@@ -45,20 +46,18 @@ def main(path: str = path):
 
 while True:
     try:
-        # tkinter handling system
-        songs: list = list()
-        for _, _, songs in walk(path):
-            pass
+
         window = tk.Tk()
         window.title("Jam Player")
-        txt_output = tk.Text(window, height=900, width=600)
-        txt_output.pack(pady=50)
-        txt_output.insert(tk.END, "SONGS:\n")
-        button: tk.Button = tk.Button(text="Play random song", command=main)
+        label = tk.Label(window, text="Input track id")
+        label.pack()
+
+        button = tk.Button(text="Play", command=main)
         button.pack()
-        for item in songs:
-            txt_output.insert(tk.END, item + "\n")
         window.mainloop()
+
+        th = threading.Thread(target=main())
+        th.start()
 
     except KeyboardInterrupt:
         print("\nquitting program")
