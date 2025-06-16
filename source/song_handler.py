@@ -32,3 +32,8 @@ class SongHandler:
         for _, _, songs in walk(path):
             return len(songs)
         return 0
+
+    def all_songs(self, path: str) -> list:
+        for _, _, songs in walk(path):
+            return songs
+        return []

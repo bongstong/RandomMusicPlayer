@@ -1,5 +1,4 @@
 from source.background_handler import BackgroundHandler
-import threading
 import tkinter as tk
 from source.music_player import MusicPlayer
 from source.song_handler import SongHandler
@@ -20,12 +19,15 @@ for information in intel:
 
 yeezy: MusicPlayer = MusicPlayer(music_path=path)
 songHandler: SongHandler = SongHandler()
+list_of_songs: list = songHandler.all_songs(path=path)
+num_songs: int = songHandler.num_songs(path=path)
+pause: bool = False
 
 
-def main(path: str = path):
+def main() -> None:
     # music playing system
     played_songs: list = songHandler.load_song_list()
-    if len(played_songs) == songHandler.num_songs(path=path) is True:
+    if len(played_songs) == num_songs is True:
         print("played all songs")
         remove("played_songs.json")
     song: str = yeezy.get_random_song(
@@ -41,7 +43,9 @@ def main(path: str = path):
     songHandler.dump_song_list(
         yeezy.handle_played_music(song, played_songs),
     )
-    yeezy.play()
+    yeezy.play_random_song()
+
+    return None
 
 
 while True:
@@ -52,13 +56,14 @@ while True:
         label = tk.Label(window, text="Input track id")
         label.pack()
 
-        button = tk.Button(text="Play", command=main)
-        button.pack()
+        play_button = tk.Button(text="Play", command=main)
+        play_button.pack()
+
+        pause_button = tk.Button(text="Pause", command=yeezy.pause_song)
+        pause_button.pack()
+
         window.mainloop()
 
-        th = threading.Thread(target=main())
-        th.start()
-
     except KeyboardInterrupt:
-        print("\nquitting program")
+        print("\nAborting program")
         quit()

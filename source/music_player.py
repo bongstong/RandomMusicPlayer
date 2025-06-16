@@ -7,17 +7,26 @@ from os import walk, urandom
 
 class MusicPlayer:
     def __init__(self, music_path: str = "~/Music/") -> None:
+        mixer.init()
         self.path: str = music_path
         self.current_song: str = ""
         return None
 
-    def play(self) -> str:
+    def play_random_song(self) -> str:
         print("playing:", self.current_song)
-        mixer.init()
         mixer.music.load(self.current_song)
         mixer.music.play()
-        mixer.music.set_endevent(USEREVENT+1)
+        mixer.music.set_endevent(USEREVENT + 1)
         return self.current_song
+
+    def pause_song(self):
+        print("pausing/starting")
+        if mixer.music.get_busy() is True:
+            print("music is playing")
+            mixer.music.pause()
+        else:
+            print("music is already paused")
+            mixer.music.unpause()
 
     def get_random_song(self, played_songs: list) -> str:
         print("getting random song")
