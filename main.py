@@ -23,6 +23,7 @@ list_of_songs: list = songHandler.all_songs(path=path)
 num_songs: int = songHandler.num_songs(path=path)
 mixData: DataHandler = DataHandler("")
 mixtape_info: list = mixData.mixtape_data(path=path)
+__import__("pprint").pprint(f"mixtape_info: {mixtape_info}")
 
 
 def main() -> None:
@@ -63,6 +64,12 @@ def get_track_id() -> int:
     return int(track_id.get())
 
 
+def button(text: str, command: str) -> None:
+    button: tk.Button = tk.Button(text=text, command=command)
+    button.pack
+    return None
+
+
 while True:
     try:
 
@@ -80,6 +87,9 @@ while True:
         # buttons
         play_button: tk.Button = tk.Button(text="Ok", command=get_track_id)
         play_button.pack()
+        # quit_button: tk.Button = tk.Button(text="Quit", command=quit)
+        # quit_button.pack()
+        button("Quit", "quit")
         pause_btn: tk.Button = tk.Button(
             text="Pause/Unpause",
             command=yeezy.pause_song,

@@ -62,14 +62,22 @@ class DataHandler:
         kwargs: path: str is the  path to the mixtape
         output: list with dicts with all the info about each song
         sorted in order: Artist; Album; Track title"""
-        mixtape_data: list = list()
         songs: list = list()
         for _, _, songs in walk(path):
             pass
+
+        mix_data: list = list()
         for song in songs:
-            song = path + "/" + song
+            ls: list = list()
+            song: str = path + "/" + song
             data_tag: TinyTag = TinyTag.get(song)
-            artist = data_tag.artist
-            album = data_tag.album
-            title = data_tag.title
-        return mixtape_data
+            artist: str = str(data_tag.artist)
+            album_name: str = str(data_tag.album)
+            title: str = str(data_tag.title)
+
+            ls.append(artist)
+            ls.append(album_name)
+            ls.append(title)
+            mix_data.append(ls)
+
+        return sorted(mix_data, key=lambda x: (x[0], x[1]))
