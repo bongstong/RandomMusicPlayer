@@ -1,3 +1,6 @@
+"""Setup file that takes info about system so that the Music
+player works properly"""
+
 from json import dump
 
 print("As of now, for linux only Gnome is supported for the background")
