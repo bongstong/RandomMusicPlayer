@@ -20,7 +20,9 @@ class DataHandler:
             pass
         return None
 
-    def change_background(self, cover_path: str, operating_sys: int) -> None:
+    def change_background(
+        self, cover_path: str, operating_sys: int, de: int = 1
+    ) -> None:
         """function that changes background by calling operating system
         commands
         kwargs: cover_path: str is the path to the album cover images
@@ -28,12 +30,20 @@ class DataHandler:
         comes from the intel.json file after running setup.py"""
         match operating_sys:
             case 1:
-                command: list = [
-                    "gsettings",
-                    "set",
-                    "org.gnome.desktop.background",
-                    "picture-uri-dark",
-                ]
+                if de == 1:
+                    command: list = [
+                        "gsettings",
+                        "set",
+                        "org.gnome.desktop.background",
+                        "picture-uri",
+                    ]
+                else:
+                    command: list = [
+                        "gsettings",
+                        "set",
+                        "org.gnome.desktop.background",
+                        "picture-uri-dark",
+                    ]
             case 0:
                 command: list = [
                     "reg",
@@ -78,6 +88,7 @@ class DataHandler:
             ls.append(artist)
             ls.append(album_name)
             ls.append(title)
+            ls.append(song)
             mix_data.append(ls)
 
         return sorted(mix_data, key=lambda x: (x[0], x[1]))

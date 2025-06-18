@@ -30,6 +30,12 @@ class MusicPlayer:
         mixer.music.set_endevent(USEREVENT + 1)
         return self.current_song
 
+    def play_specific_song(self, song: str) -> str:
+        mixer.music.load(song)
+        mixer.music.play()
+        mixer.music.set_endevent(USEREVENT + 1)
+        return song
+
     def pause_song(self) -> None:
         """func that pauses and unpauses the song if it's playing or not"""
         print("pausing/starting")
