@@ -1,4 +1,16 @@
-from tkinter import BOTH, BOTTOM, Frame, Button, LEFT, TOP, END
+from tkinter import (
+    BOTH,
+    Canvas,
+    BOTTOM,
+    RIGHT,
+    Frame,
+    Button,
+    LEFT,
+    TOP,
+    END,
+    Scrollbar,
+    Y,
+)
 from source.data_handler import DataHandler
 import tkinter as tk
 from source.music_player import MusicPlayer
@@ -62,8 +74,8 @@ def main(random: bool = True, song_to_play: str = "") -> None:
     )
     if random is True:
         yeezy.play_random_song()
-
-    return None
+    else:
+        return None
 
 
 def play_song() -> None:
@@ -77,60 +89,73 @@ def play_song() -> None:
     return None
 
 
-while True:
-    try:
+try:
 
-        # window and text input/output
-        root: tk.Tk = tk.Tk()
-        root.title("Jam Player")
-        label: tk.Label = tk.Label(
-            root,
-            text="Input track id to play specific song",
-        )
-        label.pack()
-        track_id: tk.Entry = tk.Entry()
-        track_id.pack()
+    # window and text input/output
+    root: tk.Tk = tk.Tk()
+    root.title("Jam Player")
+    label: tk.Label = tk.Label(
+        root,
+        text="Input track id to play specific song",
+    )
+    label.pack()
+    track_id: tk.Entry = tk.Entry()
+    track_id.pack()
 
-        # buttons
-        quit_button: tk.Button = tk.Button(text="Quit program", command=quit)
-        play_specific_song: tk.Button = tk.Button(
-            text="Ok",
-            command=play_song,
-        )
-        play_specific_song.pack()
-        quit_button.pack()
+    # buttons
+    quit_button: tk.Button = tk.Button(text="Quit program", command=quit)
+    play_specific_song: tk.Button = tk.Button(
+        text="Ok",
+        command=play_song,
+    )
+    play_specific_song.pack()
+    quit_button.pack()
 
-        top: Frame = Frame(root)
-        bottom: Frame = Frame(root)
-        top.pack(side=TOP)
-        bottom.pack(side=BOTTOM, fill=BOTH, expand=True)
+    top: Frame = Frame(root)
+    bottom: Frame = Frame(root)
+    top.pack(side=TOP)
+    bottom.pack(side=BOTTOM, fill=BOTH, expand=True)
 
-        play_random_button = Button(
-            root,
-            text="Play/Skip random song",
-            height=2,
-            command=main,
-        )
-        pause_btn = Button(
-            root,
-            text="Pause/Unpause",
-            height=2,
-            command=yeezy.pause_song,
-        )
-        play_random_button.pack(in_=top, side=LEFT)
-        pause_btn.pack(in_=top, side=LEFT)
+    play_random_button = Button(
+        root,
+        text="Play/Skip random song",
+        height=2,
+        command=main,
+    )
+    pause_btn = Button(
+        root,
+        text="Pause/Unpause",
+        height=2,
+        command=yeezy.pause_song,
+    )
+    play_random_button.pack(in_=top, side=LEFT)
+    pause_btn.pack(in_=top, side=LEFT)
 
-        grid_frame: Frame = Frame(root)
-        grid_frame.pack(padx=10, pady=10)
+    grid_frame: Frame = Frame(root)
+    scrollbar: Scrollbar = Scrollbar(root)
+    scrollbar.pack(side=RIGHT, fill=Y)
+    grid_frame.pack(padx=10, pady=10, fill=BOTH, expand=True)
+    canvas = Canvas(grid_frame)
+    canvas.pack(side=LEFT, fill=BOTH, expand=True)
+    scrollbar.config(command=canvas.yview)
+    canvas.config(yscrollcommand=scrollbar.set)
+    inner_frame = Frame(canvas, height=1000, width=800)
+    canvas.create_window((1000, 800), window=inner_frame)
+    canvas.bind(
+        "<Configure>",
+        lambda _: canvas.configure(
+            scrollregion=canvas.bbox("all"),
+        ),
+    )
 
-        for i in range(len(mixtape_info)):
-            for j in range(len(gui_data[0])):
-                entry: tk.Entry = tk.Entry(grid_frame, width=20)
-                entry.grid(row=i, column=j)
-                entry.insert(END, gui_data[i][j])
+    for i in range(len(mixtape_info)):
+        for j in range(len(gui_data[0])):
+            entry: tk.Entry = tk.Entry(inner_frame, width=20)
+            entry.grid(row=i, column=j)
+            entry.insert(END, gui_data[i][j])
 
-        root.mainloop()
+    root.mainloop()
 
-    except KeyboardInterrupt:
-        print("\nAborting program")
-        quit()
+except KeyboardInterrupt:
+    print("\nAborting program")
+    quit()

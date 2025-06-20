@@ -91,4 +91,4 @@ class DataHandler:
             ls.append(song)
             mix_data.append(ls)
 
-        return sorted(mix_data, key=lambda x: (x[0], x[1]))
+        return sorted(mix_data)
