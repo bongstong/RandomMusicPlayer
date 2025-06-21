@@ -1,4 +1,7 @@
 from tkinter import (
+    Label,
+    Tk,
+    Entry,
     BOTH,
     Canvas,
     BOTTOM,
@@ -12,7 +15,6 @@ from tkinter import (
     Y,
 )
 from source.data_handler import DataHandler
-import tkinter as tk
 from source.music_player import MusicPlayer
 from source.song_handler import SongHandler
 import os
@@ -92,19 +94,19 @@ def play_song() -> None:
 try:
 
     # window and text input/output
-    root: tk.Tk = tk.Tk()
+    root: Tk = Tk()
     root.title("Jam Player")
-    label: tk.Label = tk.Label(
+    label: Label = Label(
         root,
         text="Input track id to play specific song",
     )
     label.pack()
-    track_id: tk.Entry = tk.Entry()
+    track_id: Entry = Entry()
     track_id.pack()
 
     # buttons
-    quit_button: tk.Button = tk.Button(text="Quit program", command=quit)
-    play_specific_song: tk.Button = tk.Button(
+    quit_button: Button = Button(text="Quit program", command=quit)
+    play_specific_song: Button = Button(
         text="Ok",
         command=play_song,
     )
@@ -134,13 +136,13 @@ try:
     grid_frame: Frame = Frame(root)
     scrollbar: Scrollbar = Scrollbar(root)
     scrollbar.pack(side=RIGHT, fill=Y)
-    grid_frame.pack(padx=10, pady=10, fill=BOTH, expand=True)
-    canvas = Canvas(grid_frame)
+    canvas: Canvas = Canvas(grid_frame, height=800, width=1000)
+    grid_frame.pack()
     canvas.pack(side=LEFT, fill=BOTH, expand=True)
     scrollbar.config(command=canvas.yview)
     canvas.config(yscrollcommand=scrollbar.set)
-    inner_frame = Frame(canvas, height=1000, width=800)
-    canvas.create_window((1000, 800), window=inner_frame)
+    inner_frame: Frame = Frame(canvas)
+    canvas.create_window((800, 800), window=inner_frame)
     canvas.bind(
         "<Configure>",
         lambda _: canvas.configure(
@@ -150,7 +152,7 @@ try:
 
     for i in range(len(mixtape_info)):
         for j in range(len(gui_data[0])):
-            entry: tk.Entry = tk.Entry(inner_frame, width=20)
+            entry: Entry = Entry(inner_frame, width=30)
             entry.grid(row=i, column=j)
             entry.insert(END, gui_data[i][j])
 
