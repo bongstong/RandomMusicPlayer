@@ -3,6 +3,7 @@ Program that downloads album covers and modifies them to suit PC background
 """
 
 from subprocess import run
+from os import remove
 
 
 class ImageHandler:
@@ -41,13 +42,8 @@ class ImageHandler:
             [blurred][orig]overlay=(W-w)/2:(H-h)/2",
             f"{self.covers_path}/{self.album.lower().strip()}.png",
         ])
+        try:
+            remove(f"{self.covers_path}/{self.album.lower().strip()}.jpg")
+        except FileNotFoundError:
+            pass
         return None
-
-
-image: ImageHandler = ImageHandler(
-    artist_name="Nas",
-    album_name="Illmatic",
-    path="/home/nathanv/Music/MusicPlayer/source/test",
-)
-image.download_cover()
-image.blur_and_adjust()

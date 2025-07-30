@@ -22,7 +22,9 @@ from tkinter import (
 from source.data_handler import DataHandler
 from source.music_player import MusicPlayer
 from source.song_handler import SongHandler
+from source.image_handler import ImageHandler
 from os import remove
+import os
 from json import dump, load
 
 with open(file="source/intel.json", mode="r") as file:
@@ -74,6 +76,18 @@ def main(random: bool = True, song_play: str = "", inf: bool = False) -> None:
         song: str = song_play
     # background changing function/class
     songInspector: DataHandler = DataHandler(current_track=song)
+    foo: str = songInspector.album.replace(" ", "").lower()
+    album_file: str = f"{cover_path}{foo}.png"
+    print(album_file)
+    print(os.path.exists(album_file))
+    if os.path.exists(album_file) is False:
+        image_handling: ImageHandler = ImageHandler(
+            artist_name=songInspector.artist,
+            album_name=songInspector.album,
+            path=cover_path,
+        )
+        image_handling.download_cover()
+        image_handling.blur_and_adjust()
     songInspector.change_background(
         cover_path=cover_path, operating_sys=operating_system, de=desktop
     )
