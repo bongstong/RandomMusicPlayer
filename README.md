@@ -15,8 +15,8 @@ directory.
 
 TODO:
 
-- Add GUI ☑
+- Add GUI ✅
 
-- Make the program automatically fetch the album covers
+- Make the program automatically fetch the album covers ✅
 
 - Add support to other desktop environments
