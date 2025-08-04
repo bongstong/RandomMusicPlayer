@@ -17,10 +17,22 @@ song_path: str = input(
 cover_path: str = input(
     "Enter the path to the folder containing the album covers\n",
 )
+display: int = int(input("What is your display type(16:9/16:10)?[1/2]\n"))
+
+if display == 1:
+    display = 2160
+else:
+    display = 2400
 
 
 intel: list = [
-    {"OS": os, "song_path": song_path, "cover_path": cover_path, "de": de},
+    {
+        "OS": os,
+        "song_path": song_path,
+        "cover_path": cover_path,
+        "de": de,
+        "display": display,
+    },
 ]
 
 with open(file="source/intel.json", mode="w") as file:
