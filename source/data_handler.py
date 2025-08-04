@@ -16,6 +16,7 @@ class DataHandler:
             self.artist: str = str(tag.artist)
             self.album: str = str(tag.album)
             self.title: str = str(tag.title)
+            self.duration: str = str(tag.duration)
         except ValueError:
             pass
         return None
