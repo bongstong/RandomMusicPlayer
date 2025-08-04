@@ -31,7 +31,7 @@ class DataHandler:
         comes from the intel.json file after running setup.py"""
         match operating_sys:
             case 1:
-                if de == 1:
+                if de == 0:
                     command: list = [
                         "gsettings",
                         "set",
