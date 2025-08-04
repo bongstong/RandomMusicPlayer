@@ -16,7 +16,6 @@ class DataHandler:
             self.artist: str = str(tag.artist)
             self.album: str = str(tag.album)
             self.title: str = str(tag.title)
-            self.duration: str = str(tag.duration)
         except ValueError:
             pass
         return None
@@ -59,7 +58,6 @@ class DataHandler:
             case _:
                 print("Run setup program first")
                 quit()
-        print("changing background")
         album: str = self.album.replace(" ", "").lower().replace("'", "")
         album_name: str = cover_path + album + ".png"
         command.append(album_name)
@@ -79,17 +77,17 @@ class DataHandler:
 
         mix_data: list = list()
         for song in songs:
-            ls: list = list()
+            song_info: list = list()
             song: str = path + "/" + song
             data_tag: TinyTag = TinyTag.get(song)
             artist: str = str(data_tag.artist)
             album_name: str = str(data_tag.album)
             title: str = str(data_tag.title)
 
-            ls.append(artist)
-            ls.append(album_name)
-            ls.append(title)
-            ls.append(song)
-            mix_data.append(ls)
+            song_info.append(artist)
+            song_info.append(album_name)
+            song_info.append(title)
+            song_info.append(song)
+            mix_data.append(song_info)
 
         return sorted(mix_data)
