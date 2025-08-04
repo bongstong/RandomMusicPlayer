@@ -28,17 +28,17 @@ class ImageHandler:
         )
         return None
 
-    def blur_and_adjust(self) -> None:
+    def blur_and_adjust(self, display_format: int) -> None:
         run([
             "ffmpeg",
             "-y",
             "-i",
             f"{self.covers_path}/{self.album.lower().strip()}.jpg",
             "-lavfi",
-            "[0:v]scale=3840:2400:force_original_aspect_ratio=increase,\
-            crop=3840:2400,\
+            f"[0:v]scale=3840:{display_format}:force_original_aspect_ratio=increase,\
+            crop=3840:{display_format},\
             boxblur=40[blurred];\
-            [0:v]scale=3840:2400:force_original_aspect_ratio=decrease[orig];\
+            [0:v]scale=3840:{display_format}:force_original_aspect_ratio=decrease[orig];\
             [blurred][orig]overlay=(W-w)/2:(H-h)/2",
             f"{self.covers_path}/{self.album.lower().strip()}.png",
         ])

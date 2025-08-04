@@ -23,7 +23,6 @@ from source.data_handler import DataHandler
 from source.music_player import MusicPlayer
 from source.song_handler import SongHandler
 from source.image_handler import ImageHandler
-from os import remove
 import os
 from json import dump, load
 
@@ -38,6 +37,7 @@ for information in intel:
     desktop: int = information.get("de")
     path: str = information.get("song_path")
     cover_path: str = information.get("cover_path")
+    display_format: int = information.get("display")
 
 
 yeezy: MusicPlayer = MusicPlayer(music_path=path)
@@ -64,10 +64,9 @@ def main(random: bool = True, song_play: str = "", inf: bool = False) -> None:
     played_songs: list = songHandler.load_song_list()
     print("number of played songs:", (played_songs))
     print("number of total songs:", (num_songs))
-    print(len(played_songs) == num_songs)
     if len(played_songs) == num_songs:
         print("played all songs")
-        remove("played_songs.json")
+        os.remove("played_songs.json")
     if song_play == "":
         song: str = yeezy.get_random_song(
             played_songs=played_songs,
@@ -87,7 +86,7 @@ def main(random: bool = True, song_play: str = "", inf: bool = False) -> None:
             path=cover_path,
         )
         image_handling.download_cover()
-        image_handling.blur_and_adjust()
+        image_handling.blur_and_adjust(display_format=display_format)
     songInspector.change_background(
         cover_path=cover_path, operating_sys=operating_system, de=desktop
     )
