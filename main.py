@@ -40,7 +40,7 @@ for information in intel:
     display_format: int = information.get("display")
 
 
-yeezy: MusicPlayer = MusicPlayer(music_path=path)
+musicPlayer: MusicPlayer = MusicPlayer(music_path=path)
 songHandler: SongHandler = SongHandler()
 list_of_songs: list = songHandler.all_songs(path=path)
 num_songs: int = songHandler.num_songs(path=path)
@@ -68,15 +68,15 @@ def main(random: bool = True, song_play: str = "", inf: bool = False) -> None:
         print("played all songs")
         os.remove("played_songs.json")
     if song_play == "":
-        song: str = yeezy.get_random_song(
+        song: str = musicPlayer.get_random_song(
             played_songs=played_songs,
         )
     else:
         song: str = song_play
     # background changing function/class
     songInspector: DataHandler = DataHandler(current_track=song)
-    foo: str = songInspector.album.replace(" ", "").lower()
-    album_file: str = f"{cover_path}{foo}.png"
+    formatted_album_name: str = songInspector.album.replace(" ", "").lower()
+    album_file: str = f"{cover_path}{formatted_album_name}.png"
     print(album_file)
     print(os.path.exists(album_file))
     if os.path.exists(album_file) is False:
@@ -91,10 +91,10 @@ def main(random: bool = True, song_play: str = "", inf: bool = False) -> None:
         cover_path=cover_path, operating_sys=operating_system, de=desktop
     )
     songHandler.dump_song_list(
-        yeezy.handle_played_music(song, played_songs),
+        musicPlayer.handle_played_music(song, played_songs),
     )
     if random is True:
-        yeezy.play_random_song()
+        musicPlayer.play_random_song()
         if inf is True:
             sleep(float(songInspector.duration))
     else:
@@ -107,14 +107,16 @@ def play_song() -> None:
     """
     main(
         random=False,
-        song_play=yeezy.play_specific_song(filenames[int(track_id.get())]),
+        song_play=musicPlayer.play_specific_song(
+            filenames[int(track_id.get())],
+        ),
     )
     return None
 
 
 def infi() -> None:
     """plays songs non stop but blocks pause etc.
-    to exit non stop must control C"""
+    to exit non stop must press ^C"""
     try:
         while True:
             main(inf=True)
@@ -163,7 +165,7 @@ pause_btn = Button(
     root,
     text="Pause/Unpause",
     height=2,
-    command=yeezy.pause_song,
+    command=musicPlayer.pause_song,
 )
 play_random_button.pack(in_=top, side=LEFT)
 pause_btn.pack(in_=top, side=LEFT)
