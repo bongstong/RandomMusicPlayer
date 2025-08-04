@@ -21,7 +21,7 @@ from tkinter import (
 )
 from source.data_handler import DataHandler
 from source.music_player import MusicPlayer
-from source.song_handler import SongHandler
+from source.file_handler import FileHandler
 from source.image_handler import ImageHandler
 import os
 from json import dump, load
@@ -41,9 +41,9 @@ for information in intel:
 
 
 musicPlayer: MusicPlayer = MusicPlayer(music_path=path)
-songHandler: SongHandler = SongHandler()
-list_of_songs: list = songHandler.all_songs(path=path)
-num_songs: int = songHandler.num_songs(path=path)
+fileHandler: FileHandler = FileHandler()
+list_of_songs: list = fileHandler.all_songs(path=path)
+num_songs: int = fileHandler.num_songs(path=path)
 mixData: DataHandler = DataHandler("")
 mixtape_info: list = mixData.mixtape_data(path=path)
 gui_data: list = [["ID", "ARTIST", "ALBUM", "TITLE"]]
@@ -61,7 +61,7 @@ def main(random: bool = True, song_play: str = "", inf: bool = False) -> None:
     """main program which handles music playing and background
     changing and data dumping, basically everyting"""
     # music playing system
-    played_songs: list = songHandler.load_song_list()
+    played_songs: list = fileHandler.load_song_list()
     print("number of played songs:", (played_songs))
     print("number of total songs:", (num_songs))
     if len(played_songs) == num_songs:
@@ -90,7 +90,7 @@ def main(random: bool = True, song_play: str = "", inf: bool = False) -> None:
     songInspector.change_background(
         cover_path=cover_path, operating_sys=operating_system, de=desktop
     )
-    songHandler.dump_song_list(
+    fileHandler.dump_song_list(
         musicPlayer.handle_played_music(song, played_songs),
     )
     if random is True:
