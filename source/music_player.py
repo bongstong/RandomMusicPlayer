@@ -73,6 +73,8 @@ class MusicPlayer:
                 shuffle(songs)
                 seed(self.get_seed())
                 index: int = randint(0, len(songs))
+                print(self.current_song in played_songs)
+                print(self.current_song)
                 try:
                     self.current_song: str = dir + "/" + songs[index]
                 except IndexError:
@@ -80,7 +82,11 @@ class MusicPlayer:
                         "###" * 4,
                         f"\nindex: {index}\nlen(list): {len(songs)}",
                     )
-                    remove("played_songs.json")
+                    try:
+                        remove("played_songs.json")
+                        played_songs = [""]
+                    except FileNotFoundError:
+                        pass
 
         return self.current_song
 
