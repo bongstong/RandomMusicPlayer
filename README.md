@@ -1,8 +1,24 @@
 # RandomMusicPlayer
 
-Music player with advanced shuffle song player which makes sure that it doesn't
-play the same 10 songs all the time by keeping track of played songs accross
-various sessions. Built in Python.
+## Music player with advanced shuffle song player
+
+Makes sure that it doesn't play the same 10 songs all the time
+by keeping track of played songs accross various sessions.
+
+## Automatic Background changer
+
+The application finds the album name from the metadata of the track and automatically
+switches the background of your PC to the album cover. You can download your
+own covers or the program can also automatically download the covers and set
+them up for your display ratio using ffmpeg.
+
+Naming conventions for album covers:
+If you want to use your own album covers, you must follow some file naming
+conventions so that the program recognises your file and the command to change
+the background works. You have to name the picture the exact same name as the
+name of the album, but all small letters, no `'`, if the album name has a character
+like `&` you must replace it by `and` in the filename and if you have `$` you
+must replace it by `s`
 
 ## To run the program
 
@@ -20,3 +36,4 @@ TODO:
 - Make the program automatically fetch the album covers ✅
 
 - Add support to other desktop environments
+  (As of now: Gnome light/dark mode, Sway)
