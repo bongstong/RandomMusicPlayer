@@ -17,32 +17,26 @@ class ImageHandler:
         self.image = f"{self.path}/{self.album.lower().replace(" ", "")}.jpg"
         return None
 
-    def download_cover(self) -> None:
-        """downloads the cover using sacad"""
+    def run_download(self, px: str) -> None:
         run(
             [
                 "sacad",
                 self.artist,
                 self.album,
-                "1600",
+                px,
                 self.image,
             ]
         )
+        return None
+
+    def download_cover(self) -> None:
+        """downloads the cover using sacad"""
+        self.run_download(px="1600")
         if path.exists(self.image) is True:
             print("album cover was found")
             return None
         print("alum cover was not found")
-        run(
-            [
-                "sacad",
-                self.artist,
-                self.album,
-                "1000",
-                self.image,
-            ]
-        )
-        if path.exists(self.image) is True:
-            print("album cover was found")
+        self.run_download(px="1000")
         return None
 
     def blur_and_adjust(self, display_format: int) -> None:
