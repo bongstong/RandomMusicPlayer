@@ -29,40 +29,6 @@ using `pip install -r requirements.txt`
 Then run the `main.py` file using `python main.py` while being in the `source`
 directory.
 
-## Dependencies
-
-In order for the notifications to work you need to install some packages,
-you can use the following commands:
-For Fedora:
-
-```bash
-# Install required development packages
-sudo dnf install gcc gcc-c++ python3-devel cairo-devel gobject-introspection-devel glib2-devel -y
-sudo dnf install meson ninja-build
-
-# Install the missing cairo-gobject development package
-sudo dnf install cairo-gobject-devel
-```
-
-For Debian/Ubuntu:
-
-```bash
-# Update package list and install required development packages
-sudo apt update
-sudo apt install gcc g++ python3-dev libcairo2-dev libgirepository1.0-dev libglib2.0-dev -y
-sudo apt install meson ninja-build
-
-# Install the missing cairo-gobject development package
-sudo apt install libcairo-gobject2-dev
-```
-
-For Arch:
-
-```bash
-# Install required development packages
-sudo pacman -Syu gcc gcc-libs python python-pip cairo gobject-introspection glib2 meson ninja
-```
-
 TODO:
 
 - Add GUI ✅
