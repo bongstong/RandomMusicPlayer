@@ -1,4 +1,5 @@
 """program that handles data about the songs and background changing system"""
+
 from tinytag import TinyTag
 from os import walk
 from subprocess import run
@@ -29,22 +30,39 @@ class DataHandler:
         kwargs: cover_path: str is the path to the album cover images
         operating_sys: int is the operating system, by number. information
         comes from the intel.json file after running setup.py"""
+        command: list = []
+        album: str = self.album.replace(" ", "").lower().replace("'", "")
+        album_name: str = cover_path + album + ".png"
         match operating_sys:
             case 1:
-                if de == 0:
-                    command: list = [
-                        "gsettings",
-                        "set",
-                        "org.gnome.desktop.background",
-                        "picture-uri",
-                    ]
-                else:
-                    command: list = [
-                        "gsettings",
-                        "set",
-                        "org.gnome.desktop.background",
-                        "picture-uri-dark",
-                    ]
+                match de:
+                    case 0:
+                        command: list = [
+                            "gsettings",
+                            "set",
+                            "org.gnome.desktop.background",
+                            "picture-uri",
+                        ]
+                    case 1:
+                        command: list = [
+                            "gsettings",
+                            "set",
+                            "org.gnome.desktop.background",
+                            "picture-uri-dark",
+                        ]
+                    case 2:
+                        command: list = [
+                            "swaymsg",
+                            "output",
+                            '"*"',
+                            "bg",
+                            album_name,
+                            "fill",
+                        ]
+                        print(self.album)
+                        run(command)
+                        print(command)
+                        return None
             case 0:
                 command: list = [
                     "reg",
@@ -59,8 +77,6 @@ class DataHandler:
             case _:
                 print("Run setup program first")
                 quit()
-        album: str = self.album.replace(" ", "").lower().replace("'", "")
-        album_name: str = cover_path + album + ".png"
         command.append(album_name)
         print(self.album)
         run(command)
