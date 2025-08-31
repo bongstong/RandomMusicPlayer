@@ -1,16 +1,18 @@
-"""program that handles data about the songs and background changing system"""
+"""program that handles data about the songs and background changing system
+and sends notifications"""
 
 from tinytag import TinyTag
+from notifypy import Notify
 from os import walk
 from subprocess import run
 
 
 class DataHandler:
     """class that handles information about songs and
-    background changing feature.
+    background changing feature and notifications.
     kwargs: current_track: str = current playing song"""
 
-    def __init__(self, current_track: str) -> None:
+    def __init__(self, current_track: str, path: str = "") -> None:
         try:
             self.current_track: str = current_track
             tag: TinyTag = TinyTag.get(self.current_track)
@@ -18,12 +20,21 @@ class DataHandler:
             self.album: str = str(tag.album)
             self.title: str = str(tag.title)
             self.duration: str = str(tag.duration)
+            self.album_fmt: str = (
+                self.album.replace(" ", "")
+                .lower()
+                .replace("'", "")
+                .replace("&", "and")
+                .replace("$", "s")
+                .replace(":", "")
+            )
+            self.cover_path: str = path
         except ValueError:
             pass
         return None
 
     def change_background(
-        self, cover_path: str, operating_sys: int, de: int = 1
+        self, operating_sys: int, de: int = 1
     ) -> None:
         """function that changes background by calling operating system
         commands
@@ -31,8 +42,7 @@ class DataHandler:
         operating_sys: int is the operating system, by number. information
         comes from the intel.json file after running setup.py"""
         command: list = []
-        album: str = self.album.replace(" ", "").lower().replace("'", "")
-        album_name: str = cover_path + album + ".png"
+        album_name: str = self.cover_path + self.album_fmt + ".png"
         match operating_sys:
             case 1:
                 match de:
@@ -56,7 +66,7 @@ class DataHandler:
                             "output",
                             '"*"',
                             "bg",
-                            album_name,
+                            f"'{album_name}'",
                             "fill",
                         ]
                         print(self.album)
@@ -77,10 +87,22 @@ class DataHandler:
             case _:
                 print("Run setup program first")
                 quit()
-        command.append(album_name)
+        command.append(f"'{album_name}'")
         print(self.album)
         run(command)
         print(command)
+        return None
+
+    def send_notification(self) -> None:
+        icon_path: str = self.cover_path + self.album_fmt + "icon.png"
+        print(self.album_fmt)
+        print("***"*3)
+        print(icon_path)
+        notification = Notify()
+        notification.title = self.title
+        notification.message = f"by {self.artist}, from {self.album}"
+        notification.icon = icon_path
+        notification.send(block=False)
         return None
 
     def mixtape_data(self, path: str) -> list:
