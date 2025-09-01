@@ -14,17 +14,29 @@ class ImageHandler:
         self.album: str = album_name
         self.artist: str = artist_name
         self.path: str = path
-        self.image = f"{self.path}/{self.album.lower().replace(" ", "")}.jpg"
+        self.parsed_album: str = (
+            self.album.lower()
+            .replace(" ", "")
+            .replace("'", "")
+            .replace("&", "and")
+            .replace("$", "s")
+        )
+        self.image = f"{self.path}/{self.parsed_album}.jpg"
         return None
 
-    def run_download(self, px: str) -> None:
+    def run_download(self, px: str, is_icon: bool = False) -> None:
+        if is_icon is True:
+            filename: str = f"{self.path}/{self.parsed_album}icon.png"
+            print("run_download icon")
+        else:
+            filename: str = self.image
         run(
             [
                 "sacad",
                 self.artist,
                 self.album,
                 px,
-                self.image,
+                filename,
             ]
         )
         return None
