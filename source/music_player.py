@@ -2,7 +2,6 @@
 Also includes all related features as pausing the song."""
 
 import pygame
-from os import remove
 from random import seed, randint, shuffle
 from datetime import datetime
 from pathlib import Path
@@ -37,9 +36,9 @@ class MusicPlayer:
         return self.current_song
 
     def play_specific_song(self, song: str) -> str:
+        """gets song to play as input, obviously"""
         pygame.mixer.music.load(song)
         pygame.mixer.music.play()
-        pygame.mixer.music.set_endevent(pygame.USEREVENT + 1)
         return song
 
     def pause_song(self) -> None:
@@ -47,7 +46,7 @@ class MusicPlayer:
         print("pausing/starting")
         global pause
         try:
-            if pygame.mixer.music.get_busy() is True:
+            if self.check_if_music_playing() is True:
                 pause = True
                 print("music is playing")
                 pygame.mixer.music.pause()
@@ -56,6 +55,11 @@ class MusicPlayer:
         except MusicAlreadyPlaying:
             pass
         return None
+
+    def check_if_music_playing(self) -> bool:
+        if pygame.mixer.music.get_busy() is True:
+            return True
+        return False
 
     def get_random_song(self, played_songs: list) -> str:
         """func that get's random song from playlist
@@ -69,24 +73,13 @@ class MusicPlayer:
             pass
         for song in songs:
             song: str = dir + str(Path(song))
-            while self.current_song in played_songs:
-                shuffle(songs)
-                seed(self.get_seed())
-                index: int = randint(0, len(songs))
-                print(self.current_song in played_songs)
-                print(self.current_song)
-                try:
-                    self.current_song: str = dir + "/" + songs[index]
-                except IndexError:
-                    print(
-                        "###" * 4,
-                        f"\nindex: {index}\nlen(list): {len(songs)}",
-                    )
-                    try:
-                        remove("played_songs.json")
-                        played_songs = [""]
-                    except FileNotFoundError:
-                        pass
+        print("outside loop")
+        while self.current_song in played_songs:
+            print("searching for song")
+            shuffle(songs)
+            seed(self.get_seed())
+            index: int = randint(0, len(songs))
+            self.current_song: str = dir + "/" + songs[index]
 
         return self.current_song
 
