@@ -1,10 +1,12 @@
 """program that does all the filesystem work"""
+
 from json import load, dump
 from os import walk
 
 
 class FileHandler:
     """class that handles songs in files, dump and load..."""
+
     def __init__(self) -> None:
         self.played_songs: list = list()
 
@@ -35,14 +37,6 @@ class FileHandler:
         with open(file=filename, mode="w") as file:
             dump(played_songs, file, indent=4)
         return played_songs[-1]
-
-    def num_songs(self, path: str) -> int:
-        """function that returns total number of songs in mixtape
-        kwargs: path: str is the path of the mixtape
-        output: int number of songs"""
-        for _, _, songs in walk(path):
-            return len(songs)
-        return 0
 
     def all_songs(self, path: str) -> list:
         """function that returns total songs in mixtape
