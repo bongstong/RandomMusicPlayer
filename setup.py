@@ -10,7 +10,8 @@ os: int = int(
     input("What OS are you using?[Windows(0); Linux/MacOS/BSD(1)]\n"),
 )
 if os == 1:
-    de: int = int(input("are you using gnome light theme(0) or dark theme(1)"))
+    print("are you using gnome light theme(0) or dark theme(1) or sway(2)?")
+    de: int = int(input())
 song_path: str = input(
     "Enter the path to the folder of the songs(e.g ~/Music/)\n",
 )
