@@ -1,20 +1,11 @@
 """program that plays the song, and pseudo-randomly chhooses the song.
 Also includes all related features as pausing the song."""
 
-import pygame
 from random import seed, randint, shuffle
 from datetime import datetime
 from pathlib import Path
 from os import walk, urandom
-
-
-class MusicAlreadyPlaying(Exception):
-    """Error handling class"""
-
-    def __init__(self):
-        print("music is already paused")
-        pygame.mixer.music.unpause()
-        return None
+from subprocess import run
 
 
 class MusicPlayer:
@@ -22,44 +13,66 @@ class MusicPlayer:
     kwargs: music_pathL str is the path of the mixtape"""
 
     def __init__(self, music_path: str = "~/Music/") -> None:
-        pygame.init()
-        pygame.mixer.init()
         self.path: str = music_path
         self.current_song: str = ""
         return None
 
-    def play_random_song(self) -> str:
+    def play_random_song(self, visual_check: bool = False) -> str:
         """func that plays the song. outputs ths song"""
         print(f"playing: {self.current_song}")
-        pygame.mixer.music.load(self.current_song)
-        pygame.mixer.music.play()
+        match visual_check:
+            case False:
+                run(["killall", "ffplay"])
+                run(
+                    [
+                        "ffplay",
+                        self.current_song,
+                        "-showmode",
+                        "0",
+                        "-autoexit",
+                        "-nodisp",
+                    ]
+                )
+            case True:
+                run(["killall", "ffplay"])
+                run(
+                    [
+                        "ffplay",
+                        self.current_song,
+                        "-showmode",
+                        "1",
+                        "-autoexit",
+                    ]
+                )
         return self.current_song
 
-    def play_specific_song(self, song: str) -> str:
+    def play_specific_song(self, song: str, visual_check: bool) -> str:
         """gets song to play as input, obviously"""
-        pygame.mixer.music.load(song)
-        pygame.mixer.music.play()
+        match visual_check:
+            case False:
+                run(["killall", "ffplay"])
+                run(
+                    [
+                        "ffplay",
+                        song,
+                        "-showmode",
+                        "0",
+                        "-autoexit",
+                        "-nodisp",
+                    ]
+                )
+            case True:
+                run(["killall", "ffplay"])
+                run(
+                    [
+                        "ffplay",
+                        song,
+                        "-showmode",
+                        "1",
+                        "-autoexit",
+                    ]
+                )
         return song
-
-    def pause_song(self) -> None:
-        """func that pauses and unpauses the song if it's playing or not"""
-        print("pausing/starting")
-        global pause
-        try:
-            if self.check_if_music_playing() is True:
-                pause = True
-                print("music is playing")
-                pygame.mixer.music.pause()
-            else:
-                raise MusicAlreadyPlaying
-        except MusicAlreadyPlaying:
-            pass
-        return None
-
-    def check_if_music_playing(self) -> bool:
-        if pygame.mixer.music.get_busy() is True:
-            return True
-        return False
 
     def get_random_song(self, played_songs: list) -> str:
         """func that get's random song from playlist
@@ -79,8 +92,10 @@ class MusicPlayer:
             shuffle(songs)
             seed(self.get_seed())
             index: int = randint(0, len(songs))
-            self.current_song: str = dir + "/" + songs[index]
-
+            try:
+                self.current_song: str = dir + "/" + songs[index]
+            except IndexError:
+                self.current_song: str = dir + "/" + songs[index - 2]
         return self.current_song
 
     def get_seed(self) -> int:
