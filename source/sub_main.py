@@ -1,13 +1,12 @@
 """cleanup file, just so hat main.py isn't too long"""
+
 from source.image_handler import ImageHandler
 from source.music_player import MusicPlayer
 from source.file_handler import FileHandler
 from source.data_handler import DataHandler
 from json import load
-from time import sleep
 import os
 import threading
-from math import ceil
 
 
 class StoppableThread(threading.Thread):
@@ -55,23 +54,38 @@ for filename in mixtape_info:
     index += 1
 
 
-def main(random: bool = True, song_play: str = "", infi: bool = False) -> None:
+def main(
+    random: bool = True,
+    song_play: str = "",
+    infi: bool = False,
+    visuals: bool = False,
+) -> None:
     """main program which handles music playing and background
     changing and data dumping, basically everyting"""
     if infi is True:
         while True:
             print("in the loop thread")
-            sub_main(random, song_play, infi)
+            sub_main(random, song_play, visuals)
     else:
-        sub_main(random, song_play, infi)
+        sub_main(random, song_play, visuals)
+
+
+def infi_vs():
+    """plays songs non stop but blocks pause etc.
+    with animations"""
+    thread0: StoppableThread = StoppableThread(
+        target=main,
+        args=(True, "", True, True),
+    )
+    thread0.start()
+    return thread0
 
 
 def infi() -> StoppableThread:
-    """plays songs non stop but blocks pause etc.
-    to exit non stop must press ^C"""
+    """plays songs non stop but blocks pause etc."""
     thread0: StoppableThread = StoppableThread(
         target=main,
-        args=(True, "", True),
+        args=(True, "", True, False),
     )
     thread0.start()
     return thread0
@@ -91,22 +105,24 @@ def handle_images_notifications(
     if os.path.exists(album_file) is False:
         image_handling.download_cover()
         image_handling.blur_and_adjust(display_format=display_format)
-    songInspector.change_background(operating_sys=operating_system, de=desktop)
     if os.path.exists(icon_file) is False:
         image_handling.run_download(px="600", is_icon=True)
+    songInspector.change_background(operating_sys=operating_system, de=desktop)
     songInspector.send_notification()
-    pass
+    return None
 
 
-def sub_main(random: bool = True, song_play: str = "", infi: bool = False):
+def sub_main(
+    random: bool = True,
+    song_play: str = "",
+    visuals: bool = False,
+):
     played_songs: list = fileHandler.load_song_list()
     if all_songs_num == len(played_songs):
         os.remove("played_songs.json")
         played_songs: list = [""]
     if song_play == "":
-        song: str = musicPlayer.get_random_song(
-            played_songs=played_songs,
-        )
+        song: str = musicPlayer.get_random_song(played_songs=played_songs)
         fileHandler.dump_song_list(
             musicPlayer.handle_played_music(song, played_songs),
         )
@@ -125,19 +141,12 @@ def sub_main(random: bool = True, song_play: str = "", infi: bool = False):
     album_file: str = f"{cover_path}{formatted_album_name}.png"
     icon_file: str = f"{cover_path}{formatted_album_name}icon.png"
     if random is True:
-        musicPlayer.play_random_song()
         handle_images_notifications(icon_file, songInspector, album_file)
-        if infi is True:
-            foo: float = ceil(float(songInspector.duration))
-            sleep(foo)
+        musicPlayer.play_random_song(visuals)
     else:
         handle_images_notifications(icon_file, songInspector, album_file)
+        musicPlayer.play_specific_song(song, visuals)
     return None
-
-
-def exit_sleep(thread0: StoppableThread) -> None:
-    thread0.join()
-    thread0.stop()
 
 
 def abort() -> None:

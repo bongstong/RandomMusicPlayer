@@ -2,7 +2,6 @@
 Music playing application featuring a graphical user interface,
 advanced shuffling system and automatic background changer."""
 
-from time import sleep
 from tkinter import (
     Label,
     Tk,
@@ -19,113 +18,56 @@ from tkinter import (
     Scrollbar,
     Y,
 )
-from source.data_handler import DataHandler
-from source.music_player import MusicPlayer
-from source.file_handler import FileHandler
-from source.image_handler import ImageHandler
-import os
-from json import dump, load
-
-with open(file="source/intel.json", mode="r") as file:
-    intel: list = load(file)
-
-path: str = ""
-songs: list = list()
-operating_system: int = 0
-for information in intel:
-    operating_system: int = information.get("OS")
-    desktop: int = information.get("de")
-    path: str = information.get("song_path")
-    cover_path: str = information.get("cover_path")
-    display_format: int = information.get("display")
+from source.sub_main import (
+    mixtape_info,
+    StoppableThread,
+    abort,
+    infi,
+    main,
+    filenames,
+    gui_data,
+    infi_vs,
+)
 
 
-musicPlayer: MusicPlayer = MusicPlayer(music_path=path)
-fileHandler: FileHandler = FileHandler()
-list_of_songs: list = fileHandler.all_songs(path=path)
-num_songs: int = fileHandler.num_songs(path=path)
-mixData: DataHandler = DataHandler("")
-mixtape_info: list = mixData.mixtape_data(path=path)
-gui_data: list = [["ID", "ARTIST", "ALBUM", "TITLE"]]
-index: int = 0
-filenames: list = list()
-for filename in mixtape_info:
-    filenames.append(filename[-1])
-    del filename[-1]
-    filename.insert(0, index)
-    gui_data.append(filename)
-    index += 1
-
-
-def main(random: bool = True, song_play: str = "", inf: bool = False) -> None:
-    """main program which handles music playing and background
-    changing and data dumping, basically everyting"""
-    # music playing system
-    played_songs: list = fileHandler.load_song_list()
-    print("number of played songs:", (played_songs))
-    print("number of total songs:", (num_songs))
-    if len(played_songs) == num_songs:
-        print("played all songs")
-        os.remove("played_songs.json")
-    if song_play == "":
-        song: str = musicPlayer.get_random_song(
-            played_songs=played_songs,
-        )
-    else:
-        song: str = song_play
-    # background changing function/class
-    songInspector: DataHandler = DataHandler(current_track=song)
-    formatted_album_name: str = songInspector.album.replace(" ", "").lower()
-    album_file: str = f"{cover_path}{formatted_album_name}.png"
-    print(album_file)
-    print(os.path.exists(album_file))
-    if os.path.exists(album_file) is False:
-        image_handling: ImageHandler = ImageHandler(
-            artist_name=songInspector.artist,
-            album_name=songInspector.album,
-            path=cover_path,
-        )
-        image_handling.download_cover()
-        image_handling.blur_and_adjust(display_format=display_format)
-    songInspector.change_background(
-        cover_path=cover_path, operating_sys=operating_system, de=desktop
-    )
-    fileHandler.dump_song_list(
-        musicPlayer.handle_played_music(song, played_songs),
-    )
-    if random is True:
-        musicPlayer.play_random_song()
-        if inf is True:
-            sleep(float(songInspector.duration))
-    else:
-        return None
-
-
-def play_song() -> None:
-    """func that gets activated when clicking button.
+def play_song_vs() -> None:
+    """func that gets activated when clicking "Ok "button.
     gets index of specific song and plays it
     """
-    main(
-        random=False,
-        song_play=musicPlayer.play_specific_song(
-            filenames[int(track_id.get())],
-        ),
+    thread0: StoppableThread = StoppableThread(
+        target=main,
+        args=(False, filenames[int(track_id.get())], False, True),
     )
+    thread0.start()
     return None
 
 
-def infi() -> None:
-    """plays songs non stop but blocks pause etc.
-    to exit non stop must press ^C"""
-    try:
-        while True:
-            main(inf=True)
-    except KeyboardInterrupt:
-        with open(file="played_songs.json", mode="r") as file:
-            songs: list = load(file)
-        with open(file="played_songs.json", mode="w") as file:
-            dump(songs, file, indent=4)
-        return None
+def play_song() -> None:
+    """func that gets activated when clicking "Ok "button.
+    gets index of specific song and plays it
+    """
+    thread0: StoppableThread = StoppableThread(
+        target=main,
+        args=(False, filenames[int(track_id.get())], False, False),
+    )
+    thread0.start()
+    return None
+
+
+def main_btn_vs():
+    thread0: StoppableThread = StoppableThread(
+        target=main,
+        args=(True, "", False, True),
+    )
+    thread0.start()
+
+
+def main_btn():
+    thread0: StoppableThread = StoppableThread(
+        target=main,
+        args=(True, "", False),
+    )
+    thread0.start()
 
 
 # window and text input/output
@@ -136,39 +78,40 @@ label: Label = Label(
     text="Input track id to play specific song",
 )
 label.pack()
-track_id: Entry = Entry()
+track_id = Entry()
 track_id.pack()
-
-# buttons
-play_specific_song: Button = Button(
-    text="Ok",
-    command=play_song,
-)
-play_specific_song.pack()
-nostop: Button = Button(text="Sleep Mode", command=infi)
-nostop.pack()
-quit_button: Button = Button(text="Quit program", command=quit)
-quit_button.pack()
 
 top: Frame = Frame(root)
 bottom: Frame = Frame(root)
 top.pack(side=TOP)
 bottom.pack(side=BOTTOM, fill=BOTH, expand=True)
+# buttons
+play_specific_song: Button = Button(text="Play song", command=play_song)
+sleep_btn_vs: Button = Button(text="sleep with animations", command=infi_vs)
+sleep_btn_vs.pack()
+play_specific_song_vs: Button = Button(
+    text="Play song with animation",
+    command=play_song_vs,
+)
+play_specific_song.pack(in_=top, side=LEFT)
+play_specific_song_vs.pack(in_=top, side=RIGHT)
+nostop: Button = Button(text="Sleep Mode", command=infi)
+nostop.pack()
+quit_button: Button = Button(text="Quit program", command=abort)
+quit_button.pack()
+
 
 play_random_button = Button(
-    root,
-    text="Play/Skip random song",
-    height=2,
-    command=main,
+    root, text="Play/Skip random song", height=2, command=main_btn
 )
-pause_btn = Button(
+play_random_button_visuals = Button(
     root,
-    text="Pause/Unpause",
+    text="Play/Skip random song with animation",
     height=2,
-    command=musicPlayer.pause_song,
+    command=main_btn_vs,
 )
-play_random_button.pack(in_=top, side=LEFT)
-pause_btn.pack(in_=top, side=LEFT)
+play_random_button.pack()
+play_random_button_visuals.pack()
 
 grid_frame: Frame = Frame(root)
 scrollbar: Scrollbar = Scrollbar(root)
