@@ -8,6 +8,8 @@ from json import load
 import os
 import threading
 
+stop_sleep_thread: bool = False
+
 
 class StoppableThread(threading.Thread):
     """Thread class with a stop() method. The thread itself has to check
@@ -58,34 +60,30 @@ def main(
     random: bool = True,
     song_play: str = "",
     infi: bool = False,
-    visuals: bool = False,
 ) -> None:
     """main program which handles music playing and background
     changing and data dumping, basically everyting"""
+    print("In main func")
+    global stop_sleep_thread
     if infi is True:
+        print("infi is True")
         while True:
             print("in the loop thread")
-            sub_main(random, song_play, visuals)
+            print(stop_sleep_thread)
+            sub_main(random, song_play, infi)
+            if stop_sleep_thread is True:
+                stop_sleep_thread = False
+                break
     else:
-        sub_main(random, song_play, visuals)
-
-
-def infi_vs():
-    """plays songs non stop but blocks pause etc.
-    with animations"""
-    thread0: StoppableThread = StoppableThread(
-        target=main,
-        args=(True, "", True, True),
-    )
-    thread0.start()
-    return thread0
+        print("Infi is Fals")
+        sub_main(random, song_play)
 
 
 def infi() -> StoppableThread:
     """plays songs non stop but blocks pause etc."""
     thread0: StoppableThread = StoppableThread(
         target=main,
-        args=(True, "", True, False),
+        args=(True, "", True),
     )
     thread0.start()
     return thread0
@@ -112,11 +110,7 @@ def handle_images_notifications(
     return None
 
 
-def sub_main(
-    random: bool = True,
-    song_play: str = "",
-    visuals: bool = False,
-):
+def sub_main(random: bool = True, song_play: str = "", infi: bool = False):
     played_songs: list = fileHandler.load_song_list()
     if all_songs_num == len(played_songs):
         os.remove("played_songs.json")
@@ -142,10 +136,18 @@ def sub_main(
     icon_file: str = f"{cover_path}{formatted_album_name}icon.png"
     if random is True:
         handle_images_notifications(icon_file, songInspector, album_file)
-        musicPlayer.play_random_song(visuals)
+        musicPlayer.play_random_song()
+        if infi is True:
+            __import__("time").sleep(float(songInspector.duration))
     else:
         handle_images_notifications(icon_file, songInspector, album_file)
-        musicPlayer.play_specific_song(song, visuals)
+        musicPlayer.play_specific_song(song)
+    return None
+
+
+def stop_sleep_fn() -> None:
+    global stop_sleep_thread
+    stop_sleep_thread = True
     return None
 
 
