@@ -5,7 +5,7 @@ from random import seed, randint, shuffle
 from datetime import datetime
 from pathlib import Path
 from os import walk, urandom
-from subprocess import run
+import pygame
 
 
 class MusicPlayer:
@@ -13,65 +13,23 @@ class MusicPlayer:
     kwargs: music_pathL str is the path of the mixtape"""
 
     def __init__(self, music_path: str = "~/Music/") -> None:
+        pygame.init()
+        pygame.mixer.init()
         self.path: str = music_path
         self.current_song: str = ""
         return None
 
-    def play_random_song(self, visual_check: bool = False) -> str:
+    def play_random_song(self) -> str:
         """func that plays the song. outputs ths song"""
         print(f"playing: {self.current_song}")
-        match visual_check:
-            case False:
-                run(["killall", "ffplay"])
-                run(
-                    [
-                        "ffplay",
-                        self.current_song,
-                        "-showmode",
-                        "0",
-                        "-autoexit",
-                        "-nodisp",
-                    ]
-                )
-            case True:
-                run(["killall", "ffplay"])
-                run(
-                    [
-                        "ffplay",
-                        self.current_song,
-                        "-showmode",
-                        "1",
-                        "-autoexit",
-                    ]
-                )
+        pygame.mixer.music.load(self.current_song)
+        pygame.mixer.music.play()
         return self.current_song
 
-    def play_specific_song(self, song: str, visual_check: bool) -> str:
+    def play_specific_song(self, song: str) -> str:
         """gets song to play as input, obviously"""
-        match visual_check:
-            case False:
-                run(["killall", "ffplay"])
-                run(
-                    [
-                        "ffplay",
-                        song,
-                        "-showmode",
-                        "0",
-                        "-autoexit",
-                        "-nodisp",
-                    ]
-                )
-            case True:
-                run(["killall", "ffplay"])
-                run(
-                    [
-                        "ffplay",
-                        song,
-                        "-showmode",
-                        "1",
-                        "-autoexit",
-                    ]
-                )
+        pygame.mixer.music.load(song)
+        pygame.mixer.music.play()
         return song
 
     def get_random_song(self, played_songs: list) -> str:
