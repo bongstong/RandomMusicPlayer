@@ -24,22 +24,10 @@ from source.sub_main import (
     abort,
     infi,
     main,
+    stop_sleep_fn,
     filenames,
     gui_data,
-    infi_vs,
 )
-
-
-def play_song_vs() -> None:
-    """func that gets activated when clicking "Ok "button.
-    gets index of specific song and plays it
-    """
-    thread0: StoppableThread = StoppableThread(
-        target=main,
-        args=(False, filenames[int(track_id.get())], False, True),
-    )
-    thread0.start()
-    return None
 
 
 def play_song() -> None:
@@ -52,14 +40,6 @@ def play_song() -> None:
     )
     thread0.start()
     return None
-
-
-def main_btn_vs():
-    thread0: StoppableThread = StoppableThread(
-        target=main,
-        args=(True, "", False, True),
-    )
-    thread0.start()
 
 
 def main_btn():
@@ -87,31 +67,21 @@ top.pack(side=TOP)
 bottom.pack(side=BOTTOM, fill=BOTH, expand=True)
 # buttons
 play_specific_song: Button = Button(text="Play song", command=play_song)
-sleep_btn_vs: Button = Button(text="sleep with animations", command=infi_vs)
-sleep_btn_vs.pack()
-play_specific_song_vs: Button = Button(
-    text="Play song with animation",
-    command=play_song_vs,
-)
 play_specific_song.pack(in_=top, side=LEFT)
-play_specific_song_vs.pack(in_=top, side=RIGHT)
 nostop: Button = Button(text="Sleep Mode", command=infi)
 nostop.pack()
 quit_button: Button = Button(text="Quit program", command=abort)
 quit_button.pack()
 
 
+stop_sleep_btn = Button(
+    root, text="Stop Sleep", height=2, command=stop_sleep_fn
+)
 play_random_button = Button(
     root, text="Play/Skip random song", height=2, command=main_btn
 )
-play_random_button_visuals = Button(
-    root,
-    text="Play/Skip random song with animation",
-    height=2,
-    command=main_btn_vs,
-)
 play_random_button.pack()
-play_random_button_visuals.pack()
+stop_sleep_btn.pack()
 
 grid_frame: Frame = Frame(root)
 scrollbar: Scrollbar = Scrollbar(root)
