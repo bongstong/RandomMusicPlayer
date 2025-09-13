@@ -36,7 +36,7 @@ TODO:
 
 - Make the program automatically fetch the album covers ✅
 
-- Add Notifications
+- Add Notifications ✅
 
 - Add support to other desktop environments
   (As of now: Gnome light/dark mode, Sway)
