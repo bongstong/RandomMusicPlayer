@@ -36,7 +36,7 @@ def play_song() -> None:
     """
     thread0: StoppableThread = StoppableThread(
         target=main,
-        args=(False, filenames[int(track_id.get())], False, False),
+        args=(False, filenames[int(track_id.get())], False),
     )
     thread0.start()
     return None
@@ -74,9 +74,7 @@ quit_button: Button = Button(text="Quit program", command=abort)
 quit_button.pack()
 
 
-stop_sleep_btn = Button(
-    root, text="Stop Sleep", height=2, command=stop_sleep_fn
-)
+stop_sleep_btn = Button(root, text="Stop Sleep", height=2, command=stop_sleep_fn)
 play_random_button = Button(
     root, text="Play/Skip random song", height=2, command=main_btn
 )
