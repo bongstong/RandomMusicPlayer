@@ -11,21 +11,6 @@ import threading
 stop_sleep_thread: bool = False
 
 
-class StoppableThread(threading.Thread):
-    """Thread class with a stop() method. The thread itself has to check
-    regularly for the stopped() condition."""
-
-    def __init__(self, *args, **kwargs):
-        super(StoppableThread, self).__init__(*args, **kwargs)
-        self._stop_event = threading.Event()
-
-    def stop(self):
-        self._stop_event.set()
-
-    def stopped(self):
-        return self._stop_event.is_set()
-
-
 with open(file="source/intel.json", mode="r") as file:
     intel: list = load(file)
 
@@ -79,9 +64,9 @@ def main(
         sub_main(random, song_play)
 
 
-def infi() -> StoppableThread:
+def infi() -> threading.Thread:
     """plays songs non stop but blocks pause etc."""
-    thread0: StoppableThread = StoppableThread(
+    thread0: threading.Thread = threading.Thread(
         target=main,
         args=(True, "", True),
     )

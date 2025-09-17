@@ -20,7 +20,6 @@ from tkinter import (
 )
 from source.sub_main import (
     mixtape_info,
-    StoppableThread,
     abort,
     infi,
     main,
@@ -28,13 +27,14 @@ from source.sub_main import (
     filenames,
     gui_data,
 )
+from threading import Thread
 
 
 def play_song() -> None:
     """func that gets activated when clicking "Ok "button.
     gets index of specific song and plays it
     """
-    thread0: StoppableThread = StoppableThread(
+    thread0: Thread = Thread(
         target=main,
         args=(False, filenames[int(track_id.get())], False),
     )
@@ -43,7 +43,7 @@ def play_song() -> None:
 
 
 def main_btn():
-    thread0: StoppableThread = StoppableThread(
+    thread0: Thread = Thread(
         target=main,
         args=(True, "", False),
     )
@@ -74,7 +74,12 @@ quit_button: Button = Button(text="Quit program", command=abort)
 quit_button.pack()
 
 
-stop_sleep_btn = Button(root, text="Stop Sleep", height=2, command=stop_sleep_fn)
+stop_sleep_btn = Button(
+    root,
+    text="Stop Sleep",
+    height=2,
+    command=stop_sleep_fn,
+)
 play_random_button = Button(
     root, text="Play/Skip random song", height=2, command=main_btn
 )
