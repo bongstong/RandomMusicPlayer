@@ -25,11 +25,14 @@ class ImageHandler:
         return None
 
     def run_download(self, px: str, is_icon: bool = False) -> None:
-        if is_icon is True:
-            filename: str = f"{self.path}/{self.parsed_album}icon.png"
+        if is_icon:
+            filename: str = f"{self.image}icon.png"
             print("run_download icon")
         else:
             filename: str = self.image
+        print("@@@@@@")
+        print(filename)
+        print("@@@@@@")
         run(
             [
                 "sacad",
@@ -66,7 +69,7 @@ class ImageHandler:
             boxblur=40[blurred];\
             [0:v]scale=3840:{display_format}:force_original_aspect_ratio=decrease[orig];\
             [blurred][orig]overlay=(W-w)/2:(H-h)/2",
-                f"{self.path}/{self.album.lower().replace(" ", "")}.png",
+                f"{self.path}/{self.parsed_album}.png",
             ]
         )
         try:
