@@ -38,5 +38,7 @@ TODO:
 
 - Add Notifications ✅
 
+- Fix album auto download name formatting
+
 - Add support to other desktop environments
   (As of now: Gnome light/dark mode, Sway)
