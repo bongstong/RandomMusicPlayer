@@ -97,28 +97,31 @@ def handle_images_notifications(
 
 def sub_main(random: bool = True, song_play: str = "", infi: bool = False):
     played_songs: list = fileHandler.load_song_list()
-    if all_songs_num == len(played_songs):
+    print(all_songs_num)
+    print(len(played_songs) - 1)  # TODO: KILL MYSELF
+    if all_songs_num <= len(played_songs) - 1:
+        print("All songs played")
         os.remove("played_songs.json")
         played_songs: list = [""]
     if song_play == "":
+        print("going to look for song")
         song: str = musicPlayer.get_random_song(played_songs=played_songs)
+        print("found song")
+        print(song)
         fileHandler.dump_song_list(
             musicPlayer.handle_played_music(song, played_songs),
         )
     else:
         song: str = song_play
+    print(":::::::")
+    print(":::::::")
     print(song)
+    print(type(song))
+    print(":::::::")
     # background changing function/class
     songInspector: DataHandler = DataHandler(song, cover_path)
-    formatted_album_name: str = (
-        songInspector.album.replace(" ", "")
-        .lower()
-        .replace("'", "")
-        .replace("&", "and")
-        .replace("$", "s")
-    )
-    album_file: str = f"{cover_path}{formatted_album_name}.png"
-    icon_file: str = f"{cover_path}{formatted_album_name}icon.png"
+    album_file: str = f"{cover_path}{songInspector.album_fmt}.png"
+    icon_file: str = f"{cover_path}{songInspector.album_fmt}icon.png"
     if random is True:
         handle_images_notifications(icon_file, songInspector, album_file)
         musicPlayer.play_random_song()
