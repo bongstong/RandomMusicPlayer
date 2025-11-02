@@ -2,7 +2,7 @@
 and sends notifications"""
 
 from tinytag import TinyTag
-from notifypy import Notify
+from notifypy import Notify, exceptions
 from os import walk
 from subprocess import run
 
@@ -101,7 +101,10 @@ class DataHandler:
         notification = Notify()
         notification.title = self.title
         notification.message = f"by {self.artist}, from {self.album}"
-        notification.icon = icon_path
+        try:
+            notification.icon = icon_path
+        except exceptions.InvalidIconPath:
+            pass
         notification.send(block=False)
         return None
 
