@@ -18,6 +18,7 @@ class ImageHandler:
             self.album.lower()
             .replace(" ", "")
             .replace("'", "")
+            .replace(":", "")
             .replace("&", "and")
             .replace("$", "s")
         )

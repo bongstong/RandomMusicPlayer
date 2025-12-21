@@ -113,11 +113,6 @@ def sub_main(random: bool = True, song_play: str = "", infi: bool = False):
         )
     else:
         song: str = song_play
-    print(":::::::")
-    print(":::::::")
-    print(song)
-    print(type(song))
-    print(":::::::")
     # background changing function/class
     songInspector: DataHandler = DataHandler(song, cover_path)
     album_file: str = f"{cover_path}{songInspector.album_fmt}.png"
@@ -125,8 +120,8 @@ def sub_main(random: bool = True, song_play: str = "", infi: bool = False):
     if random is True:
         handle_images_notifications(icon_file, songInspector, album_file)
         musicPlayer.play_random_song()
-        if infi is True:
-            __import__("time").sleep(float(songInspector.duration))
+        # if infi is True:
+        #     __import__("time").sleep(float(songInspector.duration))
     else:
         handle_images_notifications(icon_file, songInspector, album_file)
         musicPlayer.play_specific_song(song)
@@ -141,4 +136,5 @@ def stop_sleep_fn() -> None:
 
 def abort() -> None:
     print("Quitting program")
+    __import__("subprocess").run(["killall", "ffplay"])
     os._exit(0)

@@ -1,5 +1,5 @@
 tk
-pygame
+pygame<=2.6
 tinytag
 sacad
 notify-py
