@@ -27,13 +27,10 @@ class ImageHandler:
 
     def run_download(self, px: str, is_icon: bool = False) -> None:
         if is_icon:
-            filename: str = f"{self.image}icon.png"
+            filename: str = f"{self.path}/{self.parsed_album}icon.png"
             print("run_download icon")
         else:
             filename: str = self.image
-        print("@@@@@@")
-        print(filename)
-        print("@@@@@@")
         run(
             [
                 "sacad",
