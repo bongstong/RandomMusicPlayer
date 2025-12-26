@@ -21,21 +21,22 @@ class DataHandler:
             self.title: str = str(tag.title)
             self.duration: str = str(tag.duration)
             self.album_fmt: str = (
-                self.album.replace(" ", "")
-                .lower()
+                self.album.lower()
+                .replace(" ", "")
                 .replace("'", "")
+                .replace("-", "")
+                .replace(":", "")
                 .replace("&", "and")
                 .replace("$", "s")
-                .replace(":", "")
+                .replace("(", "")
+                .replace(")", "")
             )
             self.cover_path: str = path
         except ValueError:
             pass
         return None
 
-    def change_background(
-        self, operating_sys: int, de: int = 1
-    ) -> None:
+    def change_background(self, operating_sys: int, de: int = 1) -> None:
         """function that changes background by calling operating system
         commands
         kwargs: cover_path: str is the path to the album cover images
@@ -96,7 +97,7 @@ class DataHandler:
     def send_notification(self) -> None:
         icon_path: str = self.cover_path + self.album_fmt + "icon.png"
         print(self.album_fmt)
-        print("***"*3)
+        print("***" * 3)
         print(icon_path)
         notification = Notify()
         notification.title = self.title
