@@ -23,6 +23,8 @@ class ImageHandler:
             .replace("&", "and")
             .replace("$", "s")
             .replace("(", "")
+            .replace("[", "")
+            .replace("]", "")
             .replace(")", "")
         )
         self.image = f"{self.path}/{self.parsed_album}.jpg"
