@@ -95,7 +95,7 @@ def handle_images_notifications(
     return None
 
 
-def sub_main(random: bool = True, song_play: str = "", infi: bool = False):
+def sub_main(random: bool = True, song_play: str = ""):  # ,infi:bool=False):
     played_songs: list = fileHandler.load_song_list()
     print(all_songs_num)
     print(len(played_songs) - 1)  # TODO: KILL MYSELF
@@ -118,13 +118,13 @@ def sub_main(random: bool = True, song_play: str = "", infi: bool = False):
     album_file: str = f"{cover_path}{songInspector.album_fmt}.png"
     icon_file: str = f"{cover_path}{songInspector.album_fmt}icon.png"
     if random is True:
-        handle_images_notifications(icon_file, songInspector, album_file)
         musicPlayer.play_random_song()
+        handle_images_notifications(icon_file, songInspector, album_file)
         # if infi is True:
         #     __import__("time").sleep(float(songInspector.duration))
     else:
-        handle_images_notifications(icon_file, songInspector, album_file)
         musicPlayer.play_specific_song(song)
+        handle_images_notifications(icon_file, songInspector, album_file)
     return None
 
 
