@@ -21,6 +21,7 @@ class ImageHandler:
             .replace("-", "")
             .replace(":", "")
             .replace("&", "and")
+            .replace("¥", "y")
             .replace("$", "s")
             .replace("(", "")
             .replace("[", "")

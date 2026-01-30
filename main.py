@@ -61,6 +61,12 @@ label.pack()
 track_id = Entry()
 track_id.pack()
 
+
+def skip_song_fn() -> None:
+    __import__("subprocess").run(["killall", "ffplay"])
+    return None
+
+
 top: Frame = Frame(root)
 bottom: Frame = Frame(root)
 top.pack(side=TOP)
@@ -69,9 +75,11 @@ bottom.pack(side=BOTTOM, fill=BOTH, expand=True)
 play_specific_song: Button = Button(text="Play song", command=play_song)
 play_specific_song.pack(in_=top, side=LEFT)
 nostop: Button = Button(text="Sleep Mode", command=infi)
-nostop.pack()
+nostop.pack(in_=top, side=LEFT)
+skip_song: Button = Button(text="Skip to next song", command=skip_song_fn)
+skip_song.pack(in_=top, side=LEFT)
 quit_button: Button = Button(text="Quit program", command=abort)
-quit_button.pack()
+quit_button.pack(in_=top, side=LEFT)
 
 
 stop_sleep_btn = Button(

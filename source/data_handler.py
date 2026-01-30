@@ -30,6 +30,8 @@ class DataHandler:
                 .replace("$", "s")
                 .replace("(", "")
                 .replace(")", "")
+                .replace("[", "")
+                .replace("]", "")
             )
             self.cover_path: str = path
         except ValueError:
