@@ -23,6 +23,7 @@ class DataHandler:
             self.album_fmt: str = (
                 self.album.lower()
                 .replace(" ", "")
+                .replace("¥", "y")
                 .replace("'", "")
                 .replace("-", "")
                 .replace(":", "")
