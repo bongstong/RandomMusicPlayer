@@ -33,28 +33,24 @@ class MusicPlayer:
         self.play_with_ffmpeg(song)
         return song
 
-    def get_random_song(self, played_songs: list) -> str:
+    def get_random_song(self, played_songs: list, playlist: list = []) -> str:
         """func that get's random song from playlist
         kwargs: played_songs: list is the list of already played songs
         output: randomly selected song"""
         print("getting random song")
         songs: list = list()
-        dir: str = str()
+        dir: str = ""
         self.current_song: str = ""
         for dir, _, songs in walk(self.path):
             pass
-        for song in songs:
-            song: str = dir + str(Path(song))
-        print("outside loop")
-        while self.current_song in played_songs:
-            print("searching for song")
-            shuffle(songs)
-            seed(self.get_seed())
-            index: int = randint(0, len(songs))
-            try:
-                self.current_song: str = dir + "/" + songs[index]
-            except IndexError:
-                self.current_song: str = dir + "/" + songs[index - 2]
+        fmt_songs: list = (
+            [str(Path(song)) for song in songs] if playlist == [] else playlist
+        )
+        songs: list = [song for song in fmt_songs if song not in played_songs]
+        shuffle(songs)
+        seed(self.get_seed())
+        index: int = randint(0, len(songs))
+        self.current_song: str = dir + "/" + songs[index - 1]
         return self.current_song
 
     def get_seed(self) -> int:
