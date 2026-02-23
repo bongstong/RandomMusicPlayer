@@ -17,9 +17,11 @@ class ImageHandler:
         self.parsed_album: str = (
             self.album.lower()
             .replace(" ", "")
+            .replace("!", "")
             .replace("'", "")
             .replace("-", "")
             .replace(":", "")
+            .replace("'", "")
             .replace("&", "and")
             .replace("¥", "y")
             .replace("$", "s")

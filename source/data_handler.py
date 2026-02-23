@@ -15,6 +15,7 @@ class DataHandler:
     def __init__(self, current_track: str, path: str = "") -> None:
         try:
             self.current_track: str = current_track
+            print("SONG: ", self.current_track)
             tag: TinyTag = TinyTag.get(self.current_track)
             self.artist: str = str(tag.artist)
             self.album: str = str(tag.album)
@@ -24,6 +25,7 @@ class DataHandler:
                 self.album.lower()
                 .replace(" ", "")
                 .replace("¥", "y")
+                .replace("!", "")
                 .replace("'", "")
                 .replace("-", "")
                 .replace(":", "")
@@ -35,9 +37,9 @@ class DataHandler:
                 .replace("]", "")
             )
             self.cover_path: str = path
+            return None
         except ValueError:
-            pass
-        return None
+            return None
 
     def change_background(self, operating_sys: int, de: int = 1) -> None:
         """function that changes background by calling operating system
