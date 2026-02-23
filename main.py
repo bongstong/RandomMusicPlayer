@@ -20,12 +20,14 @@ from tkinter import (
 )
 from source.sub_main import (
     mixtape_info,
+    activate_playlist0_fn,
     abort,
     infi,
     main,
     stop_sleep_fn,
     filenames,
     gui_data,
+    playlist0,
 )
 from threading import Thread
 
@@ -39,6 +41,11 @@ def play_song() -> None:
         args=(False, filenames[int(track_id.get())], False),
     )
     thread0.start()
+    return None
+
+
+def sub_add_song_to_playlist() -> None:
+    playlist0.add_song_to_playlist(song=filenames[int(track_id.get())])
     return None
 
 
@@ -74,13 +81,24 @@ bottom.pack(side=BOTTOM, fill=BOTH, expand=True)
 # buttons
 play_specific_song: Button = Button(text="Play song", command=play_song)
 play_specific_song.pack(in_=top, side=LEFT)
+# play songs non-stop
 nostop: Button = Button(text="Sleep Mode", command=infi)
 nostop.pack(in_=top, side=LEFT)
+# button to skip to next song
 skip_song: Button = Button(text="Skip to next song", command=skip_song_fn)
 skip_song.pack(in_=top, side=LEFT)
+# quit program
 quit_button: Button = Button(text="Quit program", command=abort)
 quit_button.pack(in_=top, side=LEFT)
-
+# add song to playlist 0
+add_song_playlist: Button = Button(
+    text="Add song to playlist 0", command=sub_add_song_to_playlist
+)
+add_song_playlist.pack()
+activate_playlist0: Button = Button(
+    text="Play/Stop playing playlist0", command=activate_playlist0_fn
+)
+activate_playlist0.pack()
 
 stop_sleep_btn = Button(
     root,

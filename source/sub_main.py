@@ -4,11 +4,13 @@ from source.image_handler import ImageHandler
 from source.music_player import MusicPlayer
 from source.file_handler import FileHandler
 from source.data_handler import DataHandler
+from source.playlists import PlaylistManager
 from json import load
 import os
 import threading
 
 stop_sleep_thread: bool = False
+playlist0_active = False
 
 
 with open(file="source/intel.json", mode="r") as file:
@@ -26,6 +28,7 @@ for information in intel:
 
 
 musicPlayer: MusicPlayer = MusicPlayer(music_path=path)
+playlist0: PlaylistManager = PlaylistManager("playlist0.json")
 fileHandler: FileHandler = FileHandler()
 all_songs_num: int = len(fileHandler.all_songs(path))
 mixData: DataHandler = DataHandler("")
@@ -55,13 +58,22 @@ def main(
         while True:
             print("in the loop thread")
             print(stop_sleep_thread)
-            sub_main(random, song_play, infi)
+            sub_main(random, song_play)
             if stop_sleep_thread is True:
                 stop_sleep_thread = False
                 break
     else:
         print("Infi is Fals")
         sub_main(random, song_play)
+
+
+def activate_playlist0_fn():
+    global playlist0_active
+    playlist0_active = False if playlist0_active else True
+    print("***********")
+    print(playlist0_active)
+    print("***********")
+    return None
 
 
 def infi() -> threading.Thread:
@@ -95,7 +107,11 @@ def handle_images_notifications(
     return None
 
 
-def sub_main(random: bool = True, song_play: str = "", infi: bool = False):
+def sub_main(random: bool = True, song_play: str = ""):  # ,infi: bool=False):
+    """fn Does basically everything.
+    args: random bool if song is random or chosen
+    song_play is the filename of the song the user chose if he did"""
+    global playlist0_active
     played_songs: list = fileHandler.load_song_list()
     print(all_songs_num)
     print(len(played_songs) - 1)  # TODO: KILL MYSELF
@@ -105,7 +121,14 @@ def sub_main(random: bool = True, song_play: str = "", infi: bool = False):
         played_songs: list = [""]
     if song_play == "":
         print("going to look for song")
-        song: str = musicPlayer.get_random_song(played_songs=played_songs)
+        if playlist0_active:
+            print("PLAYLIST ACTIVE")
+            song: str = musicPlayer.get_random_song(
+                played_songs=played_songs, playlist=playlist0.songs
+            )
+        else:
+            print("PLAYLIST NOT ACTIVE")
+            song: str = musicPlayer.get_random_song(played_songs=played_songs)
         print("found song")
         print(song)
         fileHandler.dump_song_list(
@@ -114,6 +137,7 @@ def sub_main(random: bool = True, song_play: str = "", infi: bool = False):
     else:
         song: str = song_play
     # background changing function/class
+    print(f"SONG!!!{song}")
     songInspector: DataHandler = DataHandler(song, cover_path)
     album_file: str = f"{cover_path}{songInspector.album_fmt}.png"
     icon_file: str = f"{cover_path}{songInspector.album_fmt}icon.png"
