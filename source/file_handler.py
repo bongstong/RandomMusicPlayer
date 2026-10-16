@@ -10,6 +10,12 @@ class FileHandler:
     def __init__(self) -> None:
         self.played_songs: list = list()
 
+    def transition_songs(self, filename: str = "transition_list.json") -> dict:
+        """loads the dict of songs that go together, transition one into
+        another so that the program always plays one right after the other"""
+        with open(file=filename, mode="r") as file:
+            return load(file)
+
     def load_song_list(self, filename: str = "played_songs.json") -> list:
         """func that loads songs from JSON file
         kwargs: filename: str is the name of the file to load from

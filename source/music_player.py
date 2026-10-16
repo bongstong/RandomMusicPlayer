@@ -1,9 +1,10 @@
 """program that plays the song, and pseudo-randomly chhooses the song.
 Also includes all related features as pausing the song."""
 
+# from pathlib import Path
 from random import seed, randint, shuffle
 from datetime import datetime
-from pathlib import Path
+from file_handler import FileHandler
 from os import walk, urandom
 from subprocess import run
 
@@ -15,6 +16,8 @@ class MusicPlayer:
     def __init__(self, music_path: str = "~/Music/") -> None:
         self.path: str = music_path
         self.current_song: str = ""
+        self.previous_song: str = ""
+        self.transition_songs: dict = FileHandler().transition_songs()
         return None
 
     def play_with_ffmpeg(self, song: str) -> None:
@@ -33,7 +36,7 @@ class MusicPlayer:
         self.play_with_ffmpeg(song)
         return song
 
-    def get_random_song(self, played_songs: list, playlist: list = []) -> str:
+    def get_random_song(self, played_songs: list, playls: list = []) -> str:
         """func that get's random song from playlist
         kwargs: played_songs: list is the list of already played songs
         output: randomly selected song"""
@@ -44,13 +47,24 @@ class MusicPlayer:
         for dir, _, songs in walk(self.path):
             pass
         fmt_songs: list = (
-            [str(Path(song)) for song in songs] if playlist == [] else playlist
+            [dir + "/" + song for song in songs] if playls == [] else playls
         )
-        songs: list = [song for song in fmt_songs if song not in played_songs]
+        songs: list = [
+            song
+            for song in fmt_songs
+            if song not in played_songs and (
+                song not in self.transition_songs.values())
+        ]
         shuffle(songs)
+        print("SONGS THAT CAN BE PLAYED: ", len(songs))
         seed(self.get_seed())
         index: int = randint(0, len(songs))
-        self.current_song: str = dir + "/" + songs[index - 1]
+        if self.previous_song in self.transition_songs.keys():
+            self.current_song: str = self.transition_songs[self.previous_song]
+            pass
+        else:
+            self.current_song: str = songs[index - 1]
+        self.previous_song: str = self.current_song
         return self.current_song
 
     def get_seed(self) -> int:
