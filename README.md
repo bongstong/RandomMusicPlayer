@@ -30,6 +30,14 @@ You also need `ffmpeg`
 Then run the `main.py` file using `python main.py` while being in the `source`
 directory.
 
+## Playlist system
+
+You can add songs to specific playlists, so that you can sort your music.
+Activate playlist with the button. To add songs to playist, either with the
+app, the buttons or add the absolute filename of the songs to the file `playlist0.json`
+in the form of a JSON list.
+As of now only 1 playlist, will add more later.
+
 TODO:
 
 - Add GUI ✅
