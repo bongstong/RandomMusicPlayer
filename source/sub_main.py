@@ -107,33 +107,41 @@ def handle_images_notifications(
     return None
 
 
-def sub_main(random: bool = True, song_play: str = ""):  # ,infi: bool=False):
+def sub_main(random: bool = True, song_play: str = "") -> None:
     """fn Does basically everything.
     args: random bool if song is random or chosen
     song_play is the filename of the song the user chose if he did"""
     global playlist0_active
     played_songs: list = fileHandler.load_song_list()
-    print(all_songs_num)
-    print(len(played_songs) - 1)  # TODO: KILL MYSELF
+    playlist0_played_songs: list = fileHandler.load_song_list(
+        filename="playlist0_played_songs.json"
+    )
     if all_songs_num <= len(played_songs) - 1:
-        print("All songs played")
         os.remove("played_songs.json")
         played_songs: list = [""]
+    if len(playlist0.songs) <= len(playlist0_played_songs):
+        print("All songs played")
+        os.remove("playlist0_played_songs.json")
+        playlist0_played_songs: list = [""]
     if song_play == "":
         print("going to look for song")
         if playlist0_active:
             print("PLAYLIST ACTIVE")
             song: str = musicPlayer.get_random_song(
-                played_songs=played_songs, playlist=playlist0.songs
+                played_songs=playlist0_played_songs, playls=playlist0.songs
+            )
+            fileHandler.dump_song_list(
+                musicPlayer.handle_played_music(song, playlist0_played_songs),
+                "playlist0_played_songs.json",
             )
         else:
             print("PLAYLIST NOT ACTIVE")
             song: str = musicPlayer.get_random_song(played_songs=played_songs)
+            fileHandler.dump_song_list(
+                musicPlayer.handle_played_music(song, played_songs),
+            )
         print("found song")
         print(song)
-        fileHandler.dump_song_list(
-            musicPlayer.handle_played_music(song, played_songs),
-        )
     else:
         song: str = song_play
     # background changing function/class
